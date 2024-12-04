@@ -2,7 +2,7 @@ pipeline {
     agent any
     environment {
         DOCKER_IMAGE = 'hello-world-java:latest'
-        }
+    }
     stages {
         stage('Checkout') {
             steps {
@@ -15,22 +15,20 @@ pipeline {
             steps {
                 echo 'Building the application...'
                 sh 'javac HelloWorld.java'
-
             }
         }
 
         stage('Package') {
             steps {
                 echo 'Packaging the application...'
-                sh ' jar cf HelloWorld.jar HelloWorld.class'
-
+                sh 'jar cf HelloWorld.jar HelloWorld.class'
             }
         }
 
         stage('Docker Build') {
             steps {
                 echo 'Building Docker Image...'
-                sh"""
+                sh """
                 docker build -t $DOCKER_IMAGE .
                 """
             }
@@ -39,11 +37,10 @@ pipeline {
 
     post {
         success {
-            echo 'Pipeline finished!'
+            echo 'Pipeline finished successfully!'
         }
         failure {
-            echo 'build failed'
+            echo 'Build failed. Please check the logs for details.'
         }
     }
 }
-
