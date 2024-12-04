@@ -4,6 +4,15 @@ pipeline {
         DOCKER_IMAGE = 'hello-world-java:latest'
     }
     stages {
+        stage('Validate Environment') {
+            steps {
+                echo 'Validating environment...'
+                sh 'java -version'
+                sh 'javac -version'
+                sh 'docker --version'
+            }
+        }
+
         stage('Checkout') {
             steps {
                 echo 'Checking out code...'
@@ -29,7 +38,7 @@ pipeline {
             steps {
                 echo 'Building Docker Image...'
                 sh """
-                docker build -t $DOCKER_IMAGE .
+                docker build -t ${DOCKER_IMAGE} .
                 """
             }
         }
@@ -40,7 +49,8 @@ pipeline {
             echo 'Pipeline finished successfully!'
         }
         failure {
-            echo 'Build failed. Please check the logs for details.'
+            echo 'Build failed. Check logs and workspace contents.'
+            sh 'ls -la'
         }
     }
 }
